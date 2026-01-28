@@ -1,4 +1,4 @@
-# Real-Time Speech Translation System (ELEC_491)
+# Alternative Project - Real-Time Speech Translation System
 
 Bu proje, gerçek zamanlı konuşma tanıma ve çeviri yapan, taşınabilir ve mobil uyumlu bir sistemdir. Amaç, yaka mikrofonu veya telefon mikrofonundan alınan sesi anında yazıya dökmek ve seçilen dile çevirmektir. Tüm süreç local olarak çalışır, internet gerektirmez ve modern bir web arayüzü sunar.
 
@@ -84,4 +84,4 @@ Mikrofon → Whisper (STT) → Transkript → Ollama (LLM) → Çeviri → Web A
 
 ## Lisans
 
-Bu proje ELEC_491 dersi kapsamında geliştirilmiştir. 
+Bu proje açık kaynak olarak geliştirilmiştir. 
