@@ -39,6 +39,11 @@ whisper.cpp/
 config.json
 *.key
 *.pem
+.env
+.env.local
+.env.*.local
+*.secret
+secrets/
 
 # Test outputs
 test_outputs/
