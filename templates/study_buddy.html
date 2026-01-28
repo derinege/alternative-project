@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Buddy Furhat - Engagement-Aware Learning Companion</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .chat-panel, .engagement-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .panel-header h2 {
+            margin-left: 10px;
+            color: #333;
+        }
+
+        .panel-header i {
+            font-size: 1.5rem;
+            color: #667eea;
+        }
+
+        /* Chat Interface */
+        .chat-messages {
+            height: 400px;
+            overflow-y: auto;
+            border: 2px solid #f0f0f0;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            background: #fafafa;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 12px 16px;
+            border-radius: 18px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+
+        .message.user {
+            background: #667eea;
+            color: white;
+            margin-left: auto;
+            text-align: right;
+        }
+
+        .message.study-buddy {
+            background: #e8f4fd;
+            color: #333;
+            margin-right: auto;
+            border: 1px solid #b3d9ff;
+        }
+
+        .message-time {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+
+        .message-tone {
+            font-size: 0.8rem;
+            font-style: italic;
+            margin-top: 3px;
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .chat-input input:focus {
+            border-color: #667eea;
+        }
+
+        .chat-input button {
+            padding: 12px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+
+        .chat-input button:hover {
+            background: #5a6fd8;
+        }
+
+        .voice-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .voice-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .voice-btn.start {
+            background: #28a745;
+            color: white;
+        }
+
+        .voice-btn.stop {
+            background: #dc3545;
+            color: white;
+        }
+
+        .voice-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .voice-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Engagement Panel */
+        .engagement-meter {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .engagement-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: conic-gradient(
+                #28a745 0deg,
+                #ffc107 120deg,
+                #dc3545 240deg,
+                #dc3545 360deg
+            );
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .engagement-circle::before {
+            content: '';
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: white;
+            position: absolute;
+        }
+
+        .engagement-score {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #333;
+            z-index: 1;
+        }
+
+        .engagement-level {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .engagement-level.low { color: #dc3545; }
+        .engagement-level.medium { color: #ffc107; }
+        .engagement-level.high { color: #28a745; }
+
+        .engagement-details {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            padding: 5px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .detail-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .detail-value {
+            color: #6c757d;
+        }
+
+        .suggestions {
+            background: #e8f4fd;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .suggestions h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .suggestions ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .suggestions li {
+            padding: 5px 0;
+            color: #495057;
+        }
+
+        .suggestions li::before {
+            content: '💡';
+            margin-right: 8px;
+        }
+
+        /* Session Controls */
+        .session-controls {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .session-btn {
+            padding: 15px 30px;
+            margin: 0 10px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .session-btn.start {
+            background: #28a745;
+            color: white;
+        }
+
+        .session-btn.end {
+            background: #dc3545;
+            color: white;
+        }
+
+        .session-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .session-info {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            text-align: left;
+        }
+
+        /* Status indicators */
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .status-indicator.connected {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-indicator.disconnected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-indicator.listening {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .engagement-circle {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .engagement-circle::before {
+                width: 90px;
+                height: 90px;
+            }
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1><i class="fas fa-robot"></i> Study Buddy Furhat</h1>
+            <p>Engagement-Aware Conversational Learning Companion</p>
+            <p style="font-size: 0.9rem; margin-top: 10px;">
+                ELEC 491 Senior Design Project | Prof. Engin Erzin | Derin Ege Evren
+            </p>
+        </div>
+
+        <!-- Session Controls -->
+        <div class="session-controls">
+            <div id="connectionStatus" class="status-indicator disconnected">
+                <i class="fas fa-circle"></i>
+                <span>Disconnected</span>
+            </div>
+            
+            <div style="margin: 20px 0;">
+                <button id="startSessionBtn" class="session-btn start">
+                    <i class="fas fa-play"></i>
+                    Start Study Session
+                </button>
+                <button id="endSessionBtn" class="session-btn end" style="display: none;">
+                    <i class="fas fa-stop"></i>
+                    End Session
+                </button>
+            </div>
+            
+            <div id="sessionInfo" class="session-info" style="display: none;">
+                <h4><i class="fas fa-info-circle"></i> Session Information</h4>
+                <div id="sessionDetails"></div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Chat Panel -->
+            <div class="chat-panel">
+                <div class="panel-header">
+                    <i class="fas fa-comments"></i>
+                    <h2>Conversation with Study Buddy</h2>
+                </div>
+                
+                <div id="chatMessages" class="chat-messages">
+                    <div class="message study-buddy fade-in">
+                        <div>Welcome! I'm Study Buddy, your engagement-aware learning companion. I can help you study by adapting to your engagement level and providing personalized support.</div>
+                        <div class="message-time">Just now</div>
+                        <div class="message-tone">Encouraging</div>
+                    </div>
+                </div>
+                
+                <div class="chat-input">
+                    <input type="text" id="messageInput" placeholder="Type your message or question..." disabled>
+                    <button id="sendBtn" onclick="sendMessage()" disabled>
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                
+                <div class="voice-controls">
+                    <button id="startListeningBtn" class="voice-btn start" onclick="startListening()" disabled>
+                        <i class="fas fa-microphone"></i>
+                        Start Voice
+                    </button>
+                    <button id="stopListeningBtn" class="voice-btn stop" onclick="stopListening()" disabled>
+                        <i class="fas fa-microphone-slash"></i>
+                        Stop Voice
+                    </button>
+                </div>
+            </div>
+
+            <!-- Engagement Panel -->
+            <div class="engagement-panel">
+                <div class="panel-header">
+                    <i class="fas fa-chart-line"></i>
+                    <h2>Engagement Monitoring</h2>
+                </div>
+                
+                <div class="engagement-meter">
+                    <div id="engagementCircle" class="engagement-circle">
+                        <div id="engagementScore" class="engagement-score">0.5</div>
+                    </div>
+                    <div id="engagementLevel" class="engagement-level medium">Medium Engagement</div>
+                </div>
+                
+                <div class="engagement-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Current Emotion:</span>
+                        <span id="currentEmotion" class="detail-value">Neutral</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Voice Energy:</span>
+                        <span id="voiceEnergy" class="detail-value">0.5</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Attention Level:</span>
+                        <span id="attentionLevel" class="detail-value">0.5</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Response Time:</span>
+                        <span id="responseTime" class="detail-value">0 ms</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Interaction Quality:</span>
+                        <span id="interactionQuality" class="detail-value">0.5</span>
+                    </div>
+                </div>
+                
+                <div id="suggestions" class="suggestions">
+                    <h4><i class="fas fa-lightbulb"></i> Study Buddy Suggestions</h4>
+                    <ul id="suggestionsList">
+                        <li>Start a conversation to begin engagement monitoring</li>
+                        <li>Try speaking naturally for better emotion detection</li>
+                        <li>Ask questions to increase engagement</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Socket.IO -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    
+    <script>
+        // Socket.IO connection
+        const socket = io();
+        
+        // DOM elements
+        const connectionStatus = document.getElementById('connectionStatus');
+        const startSessionBtn = document.getElementById('startSessionBtn');
+        const endSessionBtn = document.getElementById('endSessionBtn');
+        const sessionInfo = document.getElementById('sessionInfo');
+        const sessionDetails = document.getElementById('sessionDetails');
+        
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const startListeningBtn = document.getElementById('startListeningBtn');
+        const stopListeningBtn = document.getElementById('stopListeningBtn');
+        
+        const chatMessages = document.getElementById('chatMessages');
+        const engagementScore = document.getElementById('engagementScore');
+        const engagementLevel = document.getElementById('engagementLevel');
+        const engagementCircle = document.getElementById('engagementCircle');
+        
+        const currentEmotion = document.getElementById('currentEmotion');
+        const voiceEnergy = document.getElementById('voiceEnergy');
+        const attentionLevel = document.getElementById('attentionLevel');
+        const responseTime = document.getElementById('responseTime');
+        const interactionQuality = document.getElementById('interactionQuality');
+        const suggestionsList = document.getElementById('suggestionsList');
+        
+        // Session state
+        let isSessionActive = false;
+        let isListening = false;
+        
+        // Socket event handlers
+        socket.on('connect', function() {
+            connectionStatus.className = 'status-indicator connected';
+            connectionStatus.innerHTML = '<i class="fas fa-circle"></i><span>Connected to Study Buddy</span>';
+        });
+        
+        socket.on('disconnect', function() {
+            connectionStatus.className = 'status-indicator disconnected';
+            connectionStatus.innerHTML = '<i class="fas fa-circle"></i><span>Disconnected</span>';
+        });
+        
+        socket.on('session_started', function(data) {
+            isSessionActive = true;
+            startSessionBtn.style.display = 'none';
+            endSessionBtn.style.display = 'inline-flex';
+            sessionInfo.style.display = 'block';
+            
+            messageInput.disabled = false;
+            sendBtn.disabled = false;
+            startListeningBtn.disabled = false;
+            
+            sessionDetails.innerHTML = `
+                <p><strong>User:</strong> ${data.user_id}</p>
+                <p><strong>Started:</strong> ${new Date().toLocaleTimeString()}</p>
+                <p><strong>Status:</strong> Active</p>
+            `;
+            
+            addMessage(data.message, 'study-buddy', 'system');
+        });
+        
+        socket.on('session_ended', function(data) {
+            isSessionActive = false;
+            startSessionBtn.style.display = 'inline-flex';
+            endSessionBtn.style.display = 'none';
+            sessionInfo.style.display = 'none';
+            
+            messageInput.disabled = true;
+            sendBtn.disabled = true;
+            startListeningBtn.disabled = true;
+            stopListeningBtn.disabled = true;
+            
+            addMessage(data.message, 'study-buddy', 'system');
+        });
+        
+        socket.on('user_message', function(data) {
+            addMessage(data.text, 'user', 'user');
+        });
+        
+        socket.on('study_buddy_message', function(data) {
+            addMessage(data.text, 'study-buddy', data.tone);
+            
+            // Update suggestions if provided
+            if (data.suggested_actions && data.suggested_actions.length > 0) {
+                updateSuggestions(data.suggested_actions);
+            }
+        });
+        
+        socket.on('speech_transcript', function(data) {
+            addMessage(data.text, 'user', 'speech');
+        });
+        
+        socket.on('engagement_metrics', function(data) {
+            updateEngagementMetrics(data);
+        });
+        
+        socket.on('engagement_update', function(data) {
+            updateEngagementDisplay(data);
+        });
+        
+        socket.on('listening_started', function(data) {
+            isListening = true;
+            startListeningBtn.disabled = true;
+            stopListeningBtn.disabled = false;
+            startListeningBtn.classList.add('pulse');
+        });
+        
+        socket.on('listening_stopped', function(data) {
+            isListening = false;
+            startListeningBtn.disabled = false;
+            stopListeningBtn.disabled = true;
+            startListeningBtn.classList.remove('pulse');
+        });
+        
+        socket.on('session_error', function(data) {
+            addMessage(`Error: ${data.error}`, 'study-buddy', 'error');
+        });
+        
+        socket.on('error', function(data) {
+            addMessage(`Error: ${data.message}`, 'study-buddy', 'error');
+        });
+        
+        // Functions
+        function startSession() {
+            const userID = prompt('Enter your name or user ID:', 'Student_' + Math.floor(Math.random() * 1000));
+            if (userID) {
+                socket.emit('start_session', { user_id: userID });
+            }
+        }
+        
+        function endSession() {
+            socket.emit('end_session');
+        }
+        
+        function sendMessage() {
+            const message = messageInput.value.trim();
+            if (message && isSessionActive) {
+                socket.emit('send_text_message', { message: message });
+                messageInput.value = '';
+            }
+        }
+        
+        function startListening() {
+            if (isSessionActive) {
+                socket.emit('start_listening');
+            }
+        }
+        
+        function stopListening() {
+            socket.emit('stop_listening');
+        }
+        
+        function addMessage(text, sender, tone) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender} fade-in`;
+            
+            const time = new Date().toLocaleTimeString();
+            messageDiv.innerHTML = `
+                <div>${text}</div>
+                <div class="message-time">${time}</div>
+                <div class="message-tone">${tone}</div>
+            `;
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        function updateEngagementMetrics(data) {
+            currentEmotion.textContent = data.emotion || 'Neutral';
+            voiceEnergy.textContent = (data.voice_energy || 0).toFixed(3);
+            attentionLevel.textContent = (data.attention_level || 0).toFixed(3);
+            responseTime.textContent = `${Math.round(data.response_time || 0)} ms`;
+            interactionQuality.textContent = (data.interaction_quality || 0).toFixed(3);
+        }
+        
+        function updateEngagementDisplay(data) {
+            const score = data.engagement_score || 0.5;
+            const level = data.level || 'medium';
+            
+            engagementScore.textContent = score.toFixed(3);
+            engagementLevel.textContent = level.charAt(0).toUpperCase() + level.slice(1) + ' Engagement';
+            engagementLevel.className = `engagement-level ${level}`;
+            
+            // Update circle color based on engagement
+            const hue = score * 120; // 0 = red, 120 = green
+            engagementCircle.style.background = `conic-gradient(
+                hsl(${hue}, 70%, 50%) 0deg,
+                hsl(${hue}, 70%, 50%) ${score * 360}deg,
+                #e9ecef ${score * 360}deg,
+                #e9ecef 360deg
+            )`;
+        }
+        
+        function updateSuggestions(actions) {
+            suggestionsList.innerHTML = '';
+            actions.forEach(action => {
+                const li = document.createElement('li');
+                li.textContent = action.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                suggestionsList.appendChild(li);
+            });
+        }
+        
+        // Event listeners
+        startSessionBtn.addEventListener('click', startSession);
+        endSessionBtn.addEventListener('click', endSession);
+        
+        messageInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+        
+        // Initialize
+        console.log('Study Buddy interface loaded successfully!');
+    </script>
+</body>
+</html>
