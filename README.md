@@ -1,87 +1,91 @@
 # Alternative Project - Real-Time Speech Translation System
 
-Bu proje, gerçek zamanlı konuşma tanıma ve çeviri yapan, taşınabilir ve mobil uyumlu bir sistemdir. Amaç, yaka mikrofonu veya telefon mikrofonundan alınan sesi anında yazıya dökmek ve seçilen dile çevirmektir. Tüm süreç local olarak çalışır, internet gerektirmez ve modern bir web arayüzü sunar.
+This project is a real-time speech recognition and translation system that is portable and mobile-compatible. The goal is to instantly convert speech from a lapel microphone or phone microphone into text and translate it to a selected language. All processing runs locally, requires no internet connection, and provides a modern web interface.
 
-## Özellikler
+## Features
 
-- 🎤 **Gerçek zamanlı konuşma tanıma** (Whisper - local, hızlı, çok dilli)
-- 🌐 **Anında çeviri** (Ollama LLM - local, hızlı, gizli)
-- 📱 **Mobil uyumlu** (iPhone 14 Pro ve üstü, MacBook, taşınabilir sistemler)
-- 🖥️ **Web arayüzü** (canlı dB seviyesi, transkript, çeviri, dil algılama)
-- 🔊 **dB seviyesi ve sinyal analizi** (canlı görsel bar)
-- 🛠️ **Kolay konfigürasyon** (hedef dil, çeviri servisi seçimi)
-- 🔒 **Gizlilik** (tüm veriler localde işlenir)
+- 🎤 **Real-time speech recognition** (Whisper - local, fast, multilingual)
+- 🌐 **Instant translation** (Ollama LLM - local, fast, private)
+- 📱 **Mobile compatible** (iPhone 14 Pro and above, MacBook, portable systems)
+- 🖥️ **Web interface** (live dB level, transcript, translation, language detection)
+- 🔊 **dB level and signal analysis** (live visual bar)
+- 🛠️ **Easy configuration** (target language, translation service selection)
+- 🔒 **Privacy** (all data processed locally)
 
-## Gereksinimler
+## Requirements
 
 - Python 3.8+
-- macOS veya Linux (test: MacBook, iPhone)
-- [Ollama](https://ollama.com/) (local LLM için)
-- [faster-whisper](https://github.com/SYSTRAN/faster-whisper) (local STT için)
-- Mikrofon erişimi
+- macOS or Linux (tested on MacBook, iPhone)
+- [Ollama](https://ollama.com/) (for local LLM)
+- [faster-whisper](https://github.com/SYSTRAN/faster-whisper) (for local STT)
+- Microphone access
 
-## Kurulum
+## Installation
 
-1. **Projeyi klonlayın:**
+1. **Clone the project:**
    ```bash
-   git clone <repo-url>
-   cd ELEC_491
+   git clone https://github.com/derinege/alternative-project.git
+   cd alternative-project
    ```
-2. **Sanal ortam oluşturun ve bağımlılıkları yükleyin:**
+
+2. **Create virtual environment and install dependencies:**
    ```bash
    python3 -m venv venv
    source venv/bin/activate
    pip install -r requirements.txt
    ```
-3. **Ollama modelini indirin:**
+
+3. **Download Ollama model:**
    ```bash
    ollama pull llama3.2:1b
    ollama run llama3.2:1b
    ```
-4. **Sunucuyu başlatın:**
+
+4. **Start the server:**
    ```bash
    python app.py
    ```
-5. **Web arayüzüne girin:**
-   - [http://localhost:3000](http://localhost:3000)
 
-## Kullanım
+5. **Access the web interface:**
+   - [http://localhost:8080](http://localhost:8080)
 
-- "Dinlemeyi Başlat" butonuna tıklayın.
-- Konuşun, sistem otomatik olarak yazıya döker ve çevirir.
-- dB barı ile ses seviyenizi canlı izleyin.
-- Hedef dili ve çeviri servisini seçebilirsiniz.
+## Usage
 
-## Sistem Mimarisi
+- Click the "Start Listening" button.
+- Speak, and the system will automatically transcribe and translate.
+- Monitor your audio level in real-time with the dB bar.
+- You can select the target language and translation service.
+
+## System Architecture
 
 ```
-Mikrofon → Whisper (STT) → Transkript → Ollama (LLM) → Çeviri → Web Arayüzü
+Microphone → Whisper (STT) → Transcript → Ollama (LLM) → Translation → Web Interface
 ```
 
-## Teknik Detaylar
+## Technical Details
 
 - **Whisper (faster-whisper):**
-  - Model: `base` (mobil için optimize, hızlı ve doğru)
-  - initial_prompt ile doğruluk artırıldı
-  - Türkçe zorlaması ve otomatik dil algılama
+  - Model: `base` (optimized for mobile, fast and accurate)
+  - Accuracy improved with initial_prompt
+  - Turkish language forcing and automatic language detection
 - **Ollama (Llama 3.2:1b):**
-  - Local LLM ile hızlı çeviri
-  - Hedef dil seçilebilir
-- **Web Arayüzü:**
-  - Canlı dB barı, transkript, çeviri, dil algılama
-  - Modern ve mobil uyumlu tasarım
+  - Fast translation with local LLM
+  - Target language can be selected
+- **Web Interface:**
+  - Live dB bar, transcript, translation, language detection
+  - Modern and mobile-responsive design
 
-## Sık Karşılaşılan Sorunlar
+## Troubleshooting
 
-- **HTTP 404 Çeviri Hatası:** Ollama modelinin tam yüklendiğinden ve çalıştığından emin olun.
-- **Yanlış Transkript:** Mikrofonu yaklaştırın, Whisper modelini `base` veya daha üstü yapın.
-- **dB çok düşük:** Daha yüksek sesle konuşun veya mikrofonu değiştirin.
+- **HTTP 404 Translation Error:** Make sure the Ollama model is fully downloaded and running.
+- **Incorrect Transcript:** Move the microphone closer, or upgrade the Whisper model to `base` or higher.
+- **dB too low:** Speak louder or change the microphone.
 
-## Geliştirme ve Katkı
+## Development and Contributing
 
-- Kodlarınızı ve iyileştirmelerinizi paylaşabilirsiniz.
-- Donanım entegrasyonu (yaka mikrofonu, ESP32, vb.) için önerilere açıktır.
+- You can share your code and improvements.
+- Open to suggestions for hardware integration (lapel microphone, ESP32, etc.).
 
-## Lisans
+## License
 
-Bu proje açık kaynak olarak geliştirilmiştir. 
+This project is developed as open source.
